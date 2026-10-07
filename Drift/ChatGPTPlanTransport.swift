@@ -158,6 +158,29 @@ struct ChatGPTPlanModelCatalog: Sendable {
     }
 }
 
+// A deliberately small, explicit live check. It sends no library or mix data.
+enum ChatGPTPlanProbe {
+    static func run(model: PlanModel, accessProvider: any PlanAccessProvider, http: any PlanHTTPTransport) async throws -> String {
+        let access = try await accessProvider.access()
+        guard access.accountKey == model.accountKey else { throw PlanTransportError.accountChanged }
+        var request = try ChatGPTPlanSelectionTransport.request(path: "responses", token: access.authorizedToken())
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("text/event-stream", forHTTPHeaderField: "Accept")
+        request.httpBody = try JSONSerialization.data(withJSONObject: [
+            "model": model.slug, "store": false, "stream": true,
+            "instructions": "Reply with exactly: Drift is connected.",
+            "input": [["role": "user", "content": "Check this connection with a short greeting."]]
+        ])
+        let collector = PlanResponseCollector(streaming: true)
+        try await http.execute(request, head: { try await collector.receive($0) }, chunk: { try await collector.append($0) })
+        try Task.checkCancellation()
+        let body = try await collector.finish()
+        guard let text = String(data: body, encoding: .utf8), !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { throw PlanTransportError.invalidHTTP }
+        return text
+    }
+}
+
 private actor PlanResponseCollector {
     let streaming: Bool
     var metadata: PlanHTTPHead?
