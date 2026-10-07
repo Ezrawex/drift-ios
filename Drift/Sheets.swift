@@ -63,18 +63,19 @@ struct ConnectionsView: View {
             List {
                 Section {
                     Label("You’re trying the demo", systemImage: "circle.dotted").font(.headline)
-                    Text("Mix generation uses fictional music and local rules. No account is connected in Drift and no music is streamed.")
+                    Text("Mix generation uses fictional music and local rules. No music is streamed by Drift.")
                 }
                 Section("Qobuz · Not connected") {
                     Text("Live import and private export need a permitted native connection; signing into the Qobuz website does not connect Drift.")
                     Text("Private export, Open in Qobuz, ordered playback and AirPods controls have not been tested.").foregroundStyle(Palette.secondary)
                 }
-                Section("Cloud AI · Blocked") {
-                    Text("ChatGPT sign-in for this native iPhone app is not verified. The demo uses simple local keyword rules.")
+                Section("Cloud AI · Connection preview") {
+                    NavigationLink("Connect ChatGPT") { ChatGPTConnectionView() }
+                    Text("An official ChatGPT-plan sign-in path is available to test. Real iPhone sign-in and cloud selection are still being verified. Mix generation uses local demo rules.")
                     Text("No separately billed API is enabled. A paid route needs your choice and a secure connection design.").foregroundStyle(Palette.secondary)
                 }
                 Section("Privacy") {
-                    Text("Demo mixes stay on this device. Drift sends nothing to Qobuz or an AI provider. No passwords or keys are collected.")
+                    Text("Demo mixes stay on this device. Choosing ChatGPT sign-in contacts OpenAI; the optional connection test sends a short greeting without playlist data. No separately billed API is enabled.")
                 }
             }.scrollContentBackground(.hidden).background(Palette.background)
                 .navigationTitle("Connections").navigationBarTitleDisplayMode(.inline)
