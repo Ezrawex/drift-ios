@@ -32,7 +32,7 @@ struct CreateView: View {
                             .accessibilityIdentifier("generationError")
                     }
                     if !promptFocused {
-                        Text("Fictional sample music. Selection runs on this device; cloud AI and Qobuz are not connected.")
+                        Text("Fictional sample music. Mix selection runs on this device. Live music selection and Qobuz export are not connected.")
                             .font(.footnote).foregroundStyle(Palette.secondary).fixedSize(horizontal: false, vertical: true)
                     }
                 }.padding(.horizontal, 20).padding(.top, 4).padding(.bottom, 24)
