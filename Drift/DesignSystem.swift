@@ -37,7 +37,7 @@ struct DemoBadge: View {
             .font(.caption.weight(.semibold)).foregroundStyle(Palette.accent)
             .padding(.horizontal, 10).padding(.vertical, 6)
             .background(Palette.surface, in: Capsule())
-            .accessibilityLabel("Demo mode. Fictional music; no cloud AI or Qobuz connection.")
+            .accessibilityLabel("Demo mode. Mixes use fictional music and local selection rules.")
     }
 }
 
